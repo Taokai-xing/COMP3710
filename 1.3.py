@@ -1,5 +1,4 @@
-# barnsley_parallel.py
-# 并行张量计算版 Barnsley Fern：一次推进成千上万轨迹 + GPU 直方图
+
 import os
 os.environ["MPLBACKEND"] = "Agg"
 os.environ["OMP_NUM_THREADS"] = "1"
@@ -12,19 +11,19 @@ print("PyTorch:", torch.__version__, "| device:", device)
 
 @torch.inference_mode()
 def barnsley_fern_parallel(
-    batch=1_000_000,   # 并行轨迹数（越大越“并行”）
-    steps=100,         # 迭代步数（每步全体并行更新一次）
+    batch=1_000_000,   
+    steps=100,         
     H=1200, W=800,
     bounds=(-2.5, 2.5, 0.0, 10.0),  # xmin, xmax, ymin, ymax
     out="barnsley_parallel.png"
 ):
     xmin, xmax, ymin, ymax = bounds
 
-    # 1) 初始化：B 条轨迹的 (x,y) 向量
+   
     x = torch.zeros(batch, device=device)
     y = torch.zeros(batch, device=device)
 
-    # 2) 进行 steps 轮 IFS 随机仿射（每步并行推进 B 个点）
+   
     for _ in range(steps):
         r = torch.rand(batch, device=device)
 
@@ -77,3 +76,4 @@ def barnsley_fern_parallel(
 
 if __name__ == "__main__":
     barnsley_fern_parallel()
+
